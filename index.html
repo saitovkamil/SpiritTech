@@ -57,6 +57,31 @@
       <div class="product-list"></div>
     </section>
   </main>
+
+  <dialog class="cart-panel" id="cart-dialog" aria-labelledby="cart-title">
+  <div class="cart-header">
+    <h2 id="cart-title">Ваша корзина</h2>
+
+    <button class="cart-close" type="button" aria-label="Закрыть корзину">
+      ×
+    </button>
+  </div>
+
+  <div class="cart-items">
+    <p class="cart-empty">Корзина пока пуста</p>
+  </div>
+
+  <div class="cart-footer">
+    <p class="cart-summary">
+      Итого:
+      <strong class="cart-total">0 ₽</strong>
+    </p>
+
+    <button class="primary-button checkout-button" type="button" disabled>
+      Оформить заказ
+    </button>
+  </div>
+</dialog>
   
   <footer class="footer" id="contacts">
     <div class="container">

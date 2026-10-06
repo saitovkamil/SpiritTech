@@ -29,3 +29,183 @@ products.forEach(product => {
   card.append(imageBox, title, price, button);
   productList.append(card);
 });
+
+const cartButton = document.querySelector(".cart-button");
+const cartDialog = document.querySelector("#cart-dialog");
+const cartClose = document.querySelector(".cart-close");
+
+cartButton.addEventListener("click", () => {
+  cartDialog.showModal();
+});
+
+cartClose.addEventListener("click", () => {
+  cartDialog.close();
+});
+
+let cart = [];
+
+const cartItems = document.querySelector(".cart-items");
+const cartTotal = document.querySelector(".cart-total");
+const cartCount = document.querySelector(".cart-count");
+const checkoutButton = document.querySelector(".checkout-button");
+
+document.querySelectorAll(".add-to-cart").forEach(button => {
+  button.addEventListener("click", () => {
+    const productId = Number(button.dataset.id);
+    addToCart(productId);
+  });
+});
+
+function addToCart(productId) {
+  const item = cart.find(item => item.id === productId);
+
+  if (!item) {
+    cart.push({
+      id: productId,
+      quantity: 1
+    });
+
+    renderCart();
+  }
+
+  if (!cartDialog.open) {
+    cartDialog.showModal();
+  }
+}
+
+function removeFromCart(productId) {
+  cart = cart.filter(item => item.id !== productId);
+  renderCart();
+}
+
+cartDialog.addEventListener("click", event => {
+  const rect = cartDialog.getBoundingClientRect();
+
+  const clickedOutside =
+    event.clientX < rect.left ||
+    event.clientX > rect.right ||
+    event.clientY < rect.top ||
+    event.clientY > rect.bottom;
+
+  if (event.target === cartDialog && clickedOutside) {
+    cartDialog.close();
+  }
+});
+
+function changeQuantity(productId, change) {
+  const item = cart.find(item => item.id === productId);
+
+  if (!item) {
+    return;
+  }
+
+  item.quantity += change;
+
+  if (item.quantity <= 0) {
+    removeFromCart(productId);
+    return;
+  }
+
+  renderCart();
+}
+
+function createCartElement(tag, className, text = "") {
+  const element = document.createElement(tag);
+  element.className = className;
+  element.textContent = text;
+
+  return element;
+}
+
+function createCartButton(text, className, label, action) {
+  const button = createCartElement("button", className, text);
+  button.type = "button";
+  button.setAttribute("aria-label", label);
+  button.addEventListener("click", action);
+
+  return button;
+}
+
+function renderCart() {
+  cartItems.replaceChildren();
+
+  let total = 0;
+  let totalQuantity = 0;
+
+  if (cart.length === 0) {
+    const message = createCartElement(
+      "p",
+      "cart-empty",
+      "Корзина пока пуста"
+    );
+
+    cartItems.append(message);
+  }
+
+  cart.forEach(item => {
+    const product = products.find(product => product.id === item.id);
+
+    total += product.price * item.quantity;
+    totalQuantity += item.quantity;
+
+    const row = createCartElement("article", "cart-item");
+
+    const image = createCartElement("img", "cart-item-image");
+    image.src = product.image;
+    image.alt = product.title;
+
+    const details = createCartElement("div", "cart-item-details");
+
+    const title = createCartElement(
+      "h3",
+      "cart-item-title",
+      product.title
+    );
+
+    const price = createCartElement(
+      "p",
+      "cart-item-price",
+      product.price.toLocaleString("ru-RU") + " ₽ за штуку"
+    );
+
+    const controls = createCartElement("div", "cart-controls");
+
+    const minus = createCartButton(
+      "−",
+      "quantity-button",
+      "Уменьшить количество: " + product.title,
+      () => changeQuantity(item.id, -1)
+    );
+
+    const quantity = createCartElement(
+      "span",
+      "cart-quantity",
+      item.quantity
+    );
+
+    const plus = createCartButton(
+      "+",
+      "quantity-button",
+      "Увеличить количество: " + product.title,
+      () => changeQuantity(item.id, 1)
+    );
+
+    const remove = createCartButton(
+      "Удалить",
+      "cart-remove",
+      "Удалить из корзины: " + product.title,
+      () => removeFromCart(item.id)
+    );
+
+    controls.append(minus, quantity, plus, remove);
+    details.append(title, price, controls);
+    row.append(image, details);
+    cartItems.append(row);
+  });
+
+  cartTotal.textContent = total.toLocaleString("ru-RU") + " ₽";
+  cartCount.textContent = totalQuantity;
+  checkoutButton.disabled = cart.length === 0;
+}
+
+renderCart();
