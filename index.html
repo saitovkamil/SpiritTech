@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="description"
+    content="SpiritTech - техника для игр, работы и повседневной жизни."
+  >
+
+  <title>SpiritTech - магазин техники</title>
+
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+  <header class="header">
+    <div class="container header-content">
+      <a class="logo" href="./index.html">
+        Spirit<span>Tech</span>
+      </a>
+
+      <nav class="navigation" aria-label="Основная навигация">
+        <a href="#catalog">Каталог</a>
+        <a href="#contacts">Контакты</a>
+      </nav>
+
+      <button class="cart-button" type="button">
+        Корзина
+        <span class="cart-count">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-content">
+        <h1 id="hero-title">
+          Техника для ярких <span>побед</span>
+        </h1>
+
+        <p>Для игр, работы и повседневной жизни.</p>
+
+        <a class="primary-button" href="#catalog">
+          Смотреть каталог
+        </a>
+      </div>
+
+      <div class="hero-image" aria-hidden="true"></div>
+    </section>
+
+    <section class="catalog" id="catalog" aria-labelledby="catalog-title">
+      <h2 id="catalog-title">Каталог</h2>
+
+      <div class="product-list"></div>
+    </section>
+  </main>
+  
+  <footer class="footer" id="contacts">
+    <div class="container">
+      <p>SpiritTech</p>
+    </div>
+  </footer>
+</body>
+</html>
