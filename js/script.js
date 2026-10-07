@@ -42,7 +42,7 @@ cartClose.addEventListener("click", () => {
   cartDialog.close();
 });
 
-let cart = [];
+let cart = loadCart();
 
 const cartItems = document.querySelector(".cart-items");
 const cartTotal = document.querySelector(".cart-total");
@@ -55,6 +55,38 @@ document.querySelectorAll(".add-to-cart").forEach(button => {
     addToCart(productId);
   });
 });
+
+function loadCart() {
+  try {
+    const savedCart = JSON.parse(
+      localStorage.getItem("spirittech-cart")
+    );
+
+    if (!Array.isArray(savedCart)) {
+      return [];
+    }
+
+    return savedCart.filter(item => {
+      return item &&
+        products.some(product => product.id === item.id) &&
+        Number.isInteger(item.quantity) &&
+        item.quantity > 0;
+    });
+  } catch {
+    return [];
+  }
+}
+
+function saveCart() {
+  try {
+    localStorage.setItem(
+      "spirittech-cart",
+      JSON.stringify(cart)
+    );
+  } catch {
+    console.warn("Не удалось сохранить корзину");
+  }
+}
 
 function addToCart(productId) {
   const item = cart.find(item => item.id === productId);
@@ -206,6 +238,7 @@ function renderCart() {
   cartTotal.textContent = total.toLocaleString("ru-RU") + " ₽";
   cartCount.textContent = totalQuantity;
   checkoutButton.disabled = cart.length === 0;
+  saveCart();
 }
 
 renderCart();
