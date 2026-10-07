@@ -48,6 +48,91 @@ const cartItems = document.querySelector(".cart-items");
 const cartTotal = document.querySelector(".cart-total");
 const cartCount = document.querySelector(".cart-count");
 const checkoutButton = document.querySelector(".checkout-button");
+const checkoutDialog = document.querySelector("#checkout-dialog");
+const checkoutClose = document.querySelector(".checkout-close");
+const checkoutForm = document.querySelector(".checkout-form");
+const checkoutTitle = document.querySelector("#checkout-title");
+const checkoutTotal = document.querySelector(".checkout-total");
+const checkoutSuccess = document.querySelector(".checkout-success");
+const checkoutFields = checkoutForm.querySelectorAll("input");
+
+checkoutButton.addEventListener("click", () => {
+  if (cart.length === 0) {
+    return;
+  }
+
+  checkoutForm.reset();
+  checkoutFields.forEach(field => field.setCustomValidity(""));
+  checkoutForm.hidden = false;
+  checkoutSuccess.hidden = true;
+  checkoutTitle.textContent = "Оформление заказа";
+  checkoutTotal.textContent = cartTotal.textContent;
+  cartDialog.close();
+  checkoutDialog.showModal();
+  checkoutFields[0].focus();
+});
+
+checkoutClose.addEventListener("click", () => checkoutDialog.close());
+checkoutDialog.addEventListener("close", () => cartButton.focus());
+
+checkoutDialog.addEventListener("cancel", event => {
+  if (!checkoutSuccess.hidden) {
+    event.preventDefault();
+  }
+});
+
+checkoutDialog.addEventListener("click", event => {
+  if (!checkoutSuccess.hidden) {
+    return;
+  }
+
+  const rect = checkoutDialog.getBoundingClientRect();
+  const clickedOutside =
+    event.clientX < rect.left ||
+    event.clientX > rect.right ||
+    event.clientY < rect.top ||
+    event.clientY > rect.bottom;
+
+  if (event.target === checkoutDialog && clickedOutside) {
+    checkoutDialog.close();
+  }
+});
+
+function validateCheckoutField(field) {
+  const value = field.value.trim();
+  field.setCustomValidity("");
+
+  if (!value) {
+    field.setCustomValidity("Заполните это поле.");
+  } else if (field.name === "phone") {
+    const digits = value.replace(/\D/g, "");
+
+    if (!/^\+?[\d\s()-]+$/.test(value) || digits.length < 10 || digits.length > 15) {
+      field.setCustomValidity("Введите номер телефона: от 10 до 15 цифр.");
+    }
+  }
+}
+
+checkoutFields.forEach(field => {
+  field.addEventListener("input", () => validateCheckoutField(field));
+});
+
+checkoutForm.addEventListener("submit", event => {
+  event.preventDefault();
+  checkoutFields.forEach(validateCheckoutField);
+
+  if (!checkoutForm.reportValidity() || cart.length === 0) {
+    return;
+  }
+
+  cart = [];
+  renderCart();
+  checkoutForm.reset();
+  checkoutForm.hidden = true;
+  checkoutSuccess.hidden = false;
+  checkoutTitle.textContent = "Заказ создан!";
+  checkoutTitle.focus();
+});
 
 document.querySelectorAll(".add-to-cart").forEach(button => {
   button.addEventListener("click", () => {

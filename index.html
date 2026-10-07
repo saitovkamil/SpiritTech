@@ -21,7 +21,8 @@
   <header class="header">
     <div class="container header-content">
       <a class="logo" href="./index.html">
-        Spirit<span>Tech</span>
+        <img class="logo-image" src="images/favicon.jpg" alt="" width="40" height="40">
+        <span class="logo-name">Spirit<span>Tech</span></span>
       </a>
 
       <nav class="navigation" aria-label="Основная навигация">
@@ -30,6 +31,7 @@
       </nav>
 
       <button class="cart-button" type="button">
+        <img class="cart-icon" src="images/cart.png" alt="" width="24" height="24">
         Корзина
         <span class="cart-count">0</span>
       </button>
@@ -48,6 +50,10 @@
         <a class="primary-button" href="#catalog">
           Смотреть каталог
         </a>
+      </div>
+
+      <div class="hero-mark" aria-hidden="true">
+        <img src="images/favicon.jpg" alt="" width="300" height="300">
       </div>
     </section>
 
@@ -82,6 +88,48 @@
     </button>
   </div>
 </dialog>
+
+  <dialog class="checkout-panel" id="checkout-dialog" aria-labelledby="checkout-title">
+    <div class="cart-header">
+      <h2 id="checkout-title" tabindex="-1">Оформление заказа</h2>
+      <button class="checkout-close" type="button" aria-label="Закрыть оформление заказа">×</button>
+    </div>
+
+    <form class="checkout-form" novalidate>
+      <p class="checkout-description">Заполните данные для доставки. Все поля обязательны.</p>
+
+      <div class="checkout-names">
+        <div class="checkout-field">
+          <label for="first-name">Имя</label>
+          <input id="first-name" name="firstName" type="text" autocomplete="given-name" maxlength="60" required>
+        </div>
+        <div class="checkout-field">
+          <label for="last-name">Фамилия</label>
+          <input id="last-name" name="lastName" type="text" autocomplete="family-name" maxlength="60" required>
+        </div>
+      </div>
+
+      <div class="checkout-field">
+        <label for="delivery-address">Адрес доставки</label>
+        <input id="delivery-address" name="address" type="text" autocomplete="street-address" maxlength="200" required>
+      </div>
+
+      <div class="checkout-field">
+        <label for="phone">Контактный номер телефона</label>
+        <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="30" placeholder="+7 (999) 123-45-67" required>
+      </div>
+
+      <p class="cart-summary checkout-summary">
+        Итого:
+        <strong class="checkout-total">0 ₽</strong>
+      </p>
+      <button class="primary-button" type="submit">Создать заказ</button>
+    </form>
+
+    <div class="checkout-success" hidden>
+      <p>Спасибо за покупку в SpiritTech! Корзина очищена.</p>
+    </div>
+  </dialog>
   
   <footer class="footer" id="contacts">
     <div class="container">
